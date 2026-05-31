@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ED Recovery Resource Map</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="app">
+
+  <nav id="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-mark">◈</span>
+      <div>
+        <div class="brand-title">Recovery Map</div>
+        <div class="brand-sub">Clinical Resource Tool</div>
+      </div>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#" class="nav-link active" data-page="library"><span class="nav-icon">⬡</span> Clinical Library</a></li>
+      <li><a href="#" class="nav-link" data-page="tasks"><span class="nav-icon">⬡</span> Tasks &amp; Gaps</a></li>
+      <li><a href="#" class="nav-link" data-page="quick"><span class="nav-icon">⬡</span> Quick Capture</a></li>
+      <li><a href="#" class="nav-link" data-page="updates"><span class="nav-icon">⬡</span> Recent Updates</a></li>
+    </ul>
+  </nav>
+
+  <main id="main">
+
+    <!-- LIBRARY PAGE -->
+    <section id="page-library" class="page active">
+      <div class="page-header">
+        <div>
+          <h1>Clinical Library</h1>
+          <p class="page-subtitle">Master index of concepts, targets, benchmarks, and resources</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn-secondary" id="btnAddCategoryTop" type="button">+ Category</button>
+          <button class="btn-secondary" id="btnAddTaskTop" type="button">+ Add Task</button>
+          <button class="btn-primary" id="btnAddEntry">+ Add Entry</button>
+        </div>
+      </div>
+      <div class="toolbar">
+        <input type="text" id="librarySearch" placeholder="Search titles, tags, notes…" class="search-input" />
+        <select id="filterCategory" class="filter-select"><option value="">All Categories</option></select>
+        <select id="filterDiagnosis" class="filter-select">
+          <option value="">All Diagnoses</option>
+          <option value="BED">BED</option>
+          <option value="AN">AN</option>
+          <option value="BN">BN</option>
+          <option value="ARFID">ARFID</option>
+          <option value="OSFED">OSFED</option>
+        </select>
+        <select id="filterStatus" class="filter-select">
+          <option value="">All Statuses</option>
+          <option value="ready">Ready</option>
+          <option value="draft">Draft</option>
+          <option value="idea">Idea</option>
+          <option value="link to resources">Link to resources</option>
+          <option value="in production">In production</option>
+          <option value="needs revision">Needs revision</option>
+          <option value="priority build">Priority build</option>
+        </select>
+      </div>
+      <!-- Index view: grouped by category -->
+      <div id="libraryIndex"></div>
+    </section>
+
+    <!-- TASKS PAGE -->
+    <section id="page-tasks" class="page">
+      <div class="page-header">
+        <div>
+          <h1>Tasks &amp; Resource Gaps</h1>
+          <p class="page-subtitle">Track resource development needs and to-dos</p>
+        </div>
+        <button class="btn-primary" id="btnAddTask">+ Add Task</button>
+      </div>
+      <div class="toolbar">
+        <select id="filterTaskStatus" class="filter-select">
+          <option value="">All Statuses</option>
+          <option value="not started">Not started</option>
+          <option value="in progress">In progress</option>
+          <option value="brainstorming">Brainstorming</option>
+          <option value="nearly done">Nearly done</option>
+          <option value="completed">Completed</option>
+          <option value="postponed">Postponed</option>
+        </select>
+        <select id="filterTaskType" class="filter-select">
+          <option value="">All Focuses</option>
+          <option value="log new idea">Log new idea</option>
+          <option value="create new resource">Create new resource</option>
+          <option value="revise existing resource">Revise existing resource</option>
+          <option value="add/link resources">Add/link resources</option>
+          <option value="add research/reference notes">Add research/reference notes</option>
+          <option value="organize/index cleanup">Organize/index cleanup</option>
+          <option value="file in index later">File in index later</option>
+          <option value="review/revise/expand section">Review/revise/expand section</option>
+          <option value="misc / other">Misc / Other</option>
+        </select>
+      </div>
+      <div id="taskList" class="task-list"></div>
+    </section>
+
+
+    <!-- QUICK CAPTURE PAGE -->
+    <section id="page-quick" class="page">
+      <div class="page-header">
+        <div>
+          <h1>Quick Capture</h1>
+          <p class="page-subtitle">Save unfiled notes, links, clinical pearls, or ideas before deciding where they belong</p>
+        </div>
+      </div>
+      <div class="quick-layout">
+        <div class="quick-form-card">
+          <div class="form-row">
+            <label>Title</label>
+            <input type="text" id="quickTitle" class="form-input" placeholder="Short label for this note" />
+          </div>
+          <div class="form-row">
+            <label>Capture Type</label>
+            <select id="quickType" class="form-input">
+              <option value="clinical pearl">Clinical pearl</option>
+              <option value="research/reference note">Research/reference note</option>
+              <option value="resource link">Resource link</option>
+              <option value="intervention idea">Intervention idea</option>
+              <option value="misc / other">Misc / Other</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label>Note</label>
+            <textarea id="quickNote" class="form-input" rows="6" placeholder="Paste or type the thing you don’t want to forget…"></textarea>
+          </div>
+          <div class="form-row">
+            <label>Link <em class="label-em">optional</em></label>
+            <input type="text" id="quickLink" class="form-input" placeholder="URL, OneDrive link, or file path" />
+          </div>
+          <button class="btn-primary" id="btnSaveQuickCapture" type="button">Save Quick Capture</button>
+        </div>
+        <div>
+          <h2 class="small-section-title">Unfiled Captures</h2>
+          <div id="quickCaptureList" class="task-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RECENT UPDATES PAGE -->
+    <section id="page-updates" class="page">
+      <div class="page-header">
+        <div>
+          <h1>Recent Updates</h1>
+          <p class="page-subtitle">Track what has recently been added, edited, deleted, imported, or completed</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn-secondary" id="btnImportBackup" type="button">Import JSON Backup</button>
+          <button class="btn-primary" id="btnExportBackup" type="button">Export JSON Backup</button>
+          <input type="file" id="backupFileInput" accept="application/json,.json" style="display:none" />
+        </div>
+      </div>
+      <div class="backup-note">
+        <strong>Backup note:</strong> this exports the full local app data as structured JSON. It is not cloud sync, but it keeps the data easy to back up, move, and eventually update with AI assistance.
+      </div>
+      <div id="recentUpdatesList" class="updates-list"></div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ADD/EDIT ENTRY MODAL -->
+<div id="modalEntry" class="modal-overlay hidden">
+  <div class="modal modal-wide">
+    <div class="modal-header">
+      <h2 id="modalEntryTitle">Add Library Entry</h2>
+      <button class="modal-close" data-close="modalEntry">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <label>Title *</label>
+        <input type="text" id="entryTitle" class="form-input" placeholder="Entry title" />
+      </div>
+
+      <div class="form-row two-col">
+        <div>
+          <label>Category *
+            <button class="add-new-btn" id="btnAddCategory" type="button">+ new</button>
+          </label>
+          <select id="entryCategory" class="form-input"></select>
+        </div>
+        <div>
+          <label>Sub-Category
+            <button class="add-new-btn" id="btnAddSubcategory" type="button">+ new</button>
+          </label>
+          <select id="entrySubcategory" class="form-input"><option value="">None</option></select>
+        </div>
+      </div>
+
+
+      <div class="form-row">
+        <label>Notes <em class="label-em">(private)</em></label>
+        <div class="rich-editor-wrap">
+          <div class="rich-toolbar" data-editor="entryNotes">
+            <button type="button" data-cmd="bold"><strong>B</strong></button>
+            <button type="button" data-cmd="italic"><em>I</em></button>
+            <button type="button" data-cmd="underline"><u>U</u></button>
+            <button type="button" data-cmd="insertUnorderedList">• List</button>
+            <button type="button" data-cmd="insertOrderedList">1. List</button>
+            <button type="button" data-cmd="createLink">Link</button>
+          </div>
+          <div id="entryNotes" class="form-input rich-editor" contenteditable="true" data-placeholder="Clinical thoughts, wording ideas, session notes — not printed on plan"></div>
+        </div>
+      </div>
+
+      <!-- TAGS -->
+      <div class="tag-section">
+        <div class="tag-group-label">Tags</div>
+        <div class="tag-rows">
+          <div class="tag-row">
+            <span class="tag-row-label">Diagnosis</span>
+            <div class="tag-options" data-group="diagnosis">
+              <label class="tag-check" id="diagAllLabel"><input type="checkbox" id="diagAll" value="ALL"> All</label>
+              <label class="tag-check"><input type="checkbox" value="BED"> BED</label>
+              <label class="tag-check"><input type="checkbox" value="AN"> AN</label>
+              <label class="tag-check"><input type="checkbox" value="BN"> BN</label>
+              <label class="tag-check"><input type="checkbox" value="ARFID"> ARFID</label>
+              <label class="tag-check"><input type="checkbox" value="OSFED"> OSFED</label>
+              <label class="tag-check"><input type="checkbox" value="Atypical AN"> Atypical AN</label>
+              <label class="tag-check"><input type="checkbox" value="ED + neurodivergence"> ED + neurodivergence</label>
+              <label class="tag-check"><input type="checkbox" value="ED + GI concerns"> ED + GI concerns</label>
+              <label class="tag-check"><input type="checkbox" value="ED + sports/dance"> ED + sports/dance</label>
+            </div>
+          </div>
+          <div class="tag-row">
+            <span class="tag-row-label">ED Behaviors</span>
+            <div class="tag-options" data-group="behaviors">
+              <label class="tag-check"><input type="checkbox" value="Restriction"> Restriction</label>
+              <label class="tag-check"><input type="checkbox" value="Binge eating"> Binge eating</label>
+              <label class="tag-check"><input type="checkbox" value="Meal skipping"> Meal skipping</label>
+              <label class="tag-check"><input type="checkbox" value="Long gaps"> Long gaps</label>
+              <label class="tag-check"><input type="checkbox" value="Post-binge restriction"> Post-binge restriction</label>
+              <label class="tag-check"><input type="checkbox" value="Food rules"> Food rules</label>
+              <label class="tag-check"><input type="checkbox" value="Shame"> Shame</label>
+              <label class="tag-check"><input type="checkbox" value="Secretive eating"> Secretive eating</label>
+              <label class="tag-check"><input type="checkbox" value="Compensatory behaviors"> Compensatory behaviors</label>
+              <label class="tag-check"><input type="checkbox" value="Calorie counting"> Calorie counting</label>
+              <label class="tag-check"><input type="checkbox" value="Body checking"> Body checking</label>
+              <label class="tag-check"><input type="checkbox" value="Avoidance"> Avoidance</label>
+            </div>
+          </div>
+          <div class="tag-row">
+            <span class="tag-row-label">Recovery Skills</span>
+            <div class="tag-options" data-group="skills">
+              <label class="tag-check"><input type="checkbox" value="Regular eating"> Regular eating</label>
+              <label class="tag-check"><input type="checkbox" value="Adequate intake"> Adequate intake</label>
+              <label class="tag-check"><input type="checkbox" value="Post-binge repair"> Post-binge repair</label>
+              <label class="tag-check"><input type="checkbox" value="Flexible structure"> Flexible structure</label>
+              <label class="tag-check"><input type="checkbox" value="Urge coping"> Urge coping</label>
+              <label class="tag-check"><input type="checkbox" value="Fullness tolerance"> Fullness tolerance</label>
+              <label class="tag-check"><input type="checkbox" value="Meal planning"> Meal planning</label>
+              <label class="tag-check"><input type="checkbox" value="Relapse prevention"> Relapse prevention</label>
+              <label class="tag-check"><input type="checkbox" value="Food flexibility"> Food flexibility</label>
+            </div>
+          </div>
+          <div class="tag-row">
+            <span class="tag-row-label">Status</span>
+            <div class="tag-options" data-group="status">
+              <label class="tag-check"><input type="radio" name="statusTag" value="ready"> <span class="status-dot" style="background:#4a8c4a"></span> Ready</label>
+              <label class="tag-check"><input type="radio" name="statusTag" value="draft"> <span class="status-dot" style="background:#8a6fa8"></span> Draft</label>
+              <label class="tag-check"><input type="radio" name="statusTag" value="idea"> <span class="status-dot" style="background:#b8860b"></span> Idea</label>
+              <label class="tag-check"><input type="radio" name="statusTag" value="link to resources"> <span class="status-dot" style="background:#3c7aaa"></span> Link to resources</label>
+              <label class="tag-check"><input type="radio" name="statusTag" value="in production"> <span class="status-dot" style="background:#4a7a6a"></span> In production</label>
+              <label class="tag-check"><input type="radio" name="statusTag" value="needs revision"> <span class="status-dot" style="background:#b8860b"></span> Needs revision</label>
+              <label class="tag-check"><input type="radio" name="statusTag" value="priority build"> <span class="status-dot" style="background:#b84a2a"></span> Priority build</label>
+              <label class="tag-check"><input type="radio" name="statusTag" value="resource gap"> <span class="status-dot" style="background:#b84a2a"></span> Resource gap</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LINKED RESOURCES -->
+      <div class="form-row">
+        <label>Linked Resources</label>
+        <div id="linkedResourcesList"></div>
+        <button class="btn-outline btn-sm" id="btnAddResource" type="button">+ Add resource</button>
+      </div>
+
+      <!-- ADD TO TASK LIST CHECKBOX -->
+      <div class="form-row">
+        <label class="checkbox-label">
+          <input type="checkbox" id="chkAddTask" checked>
+          <span>Add to task list to link more resources</span>
+        </label>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn-danger hidden" id="btnDeleteEntry" type="button">Delete Entry</button>
+      <button class="btn-secondary" data-close="modalEntry">Cancel</button>
+      <button class="btn-primary" id="btnSaveEntry">Save Entry</button>
+    </div>
+  </div>
+</div>
+
+<!-- NEW CATEGORY/SUBCATEGORY MODAL -->
+<div id="modalNewCat" class="modal-overlay hidden">
+  <div class="modal modal-narrow">
+    <div class="modal-header">
+      <h2 id="modalNewCatTitle">Add Category</h2>
+      <button class="modal-close" data-close="modalNewCat">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <label>What do you want to add?</label>
+        <select id="newCatType" class="form-input">
+          <option value="category">Category</option>
+          <option value="subcategory">Subcategory</option>
+        </select>
+      </div>
+      <div class="form-row" id="newCatParentRow" style="display:none">
+        <label>Current Category</label>
+        <select id="newCatParentSelect" class="form-input"></select>
+      </div>
+      <div class="form-row">
+        <label id="newCatLabel">Category name</label>
+        <input type="text" id="newCatName" class="form-input" placeholder="Enter name…" />
+      </div>
+      <button class="btn-outline btn-sm" id="btnOpenCategoryManager" type="button">Edit Categories</button>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" data-close="modalNewCat">Cancel</button>
+      <button class="btn-primary" id="btnSaveNewCat">Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- MANAGE CATEGORIES MODAL -->
+<div id="modalCategoryManager" class="modal-overlay hidden">
+  <div class="modal modal-wide">
+    <div class="modal-header">
+      <h2>Manage Categories</h2>
+      <button class="modal-close" data-close="modalCategoryManager">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="hint-text" style="margin-bottom:12px">Edit category and subcategory names, or remove ones you no longer need. Existing entries will keep their old labels unless you update them separately.</p>
+      <div id="categoryManagerRows"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" data-close="modalCategoryManager">Cancel</button>
+      <button class="btn-primary" id="btnSaveCategoryManager">Save Categories</button>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW ENTRY MODAL -->
+<div id="modalView" class="modal-overlay hidden">
+  <div class="modal modal-wide">
+    <div class="modal-header">
+      <h2 id="viewTitle">Entry Detail</h2>
+      <button class="modal-close" data-close="modalView">✕</button>
+    </div>
+    <div class="modal-body" id="viewBody"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" data-close="modalView">Close</button>
+      <button class="btn-outline" id="btnEditFromView">Edit</button>
+      
+    </div>
+  </div>
+</div>
+
+<!-- ENTRY NOTES / RESOURCES MODAL -->
+<div id="modalEntryWorkspace" class="modal-overlay hidden">
+  <div class="modal modal-wide">
+    <div class="modal-header">
+      <h2 id="workspaceTitle">Entry Notes & Resources</h2>
+      <button class="modal-close" data-close="modalEntryWorkspace">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <label>Current Notes</label>
+        <div class="rich-editor-wrap">
+          <div class="rich-toolbar" data-editor="workspaceExistingNotes">
+            <button type="button" data-cmd="bold"><strong>B</strong></button>
+            <button type="button" data-cmd="italic"><em>I</em></button>
+            <button type="button" data-cmd="underline"><u>U</u></button>
+            <button type="button" data-cmd="insertUnorderedList">• List</button>
+            <button type="button" data-cmd="insertOrderedList">1. List</button>
+            <button type="button" data-cmd="createLink">Link</button>
+          </div>
+          <div id="workspaceExistingNotes" class="form-input rich-editor note-composer" contenteditable="true" data-placeholder="No notes yet."></div>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Add New Note</label>
+        <div class="rich-editor-wrap">
+          <div class="rich-toolbar" data-editor="workspaceNewNote">
+            <button type="button" data-cmd="bold"><strong>B</strong></button>
+            <button type="button" data-cmd="italic"><em>I</em></button>
+            <button type="button" data-cmd="underline"><u>U</u></button>
+            <button type="button" data-cmd="insertUnorderedList">• List</button>
+            <button type="button" data-cmd="insertOrderedList">1. List</button>
+            <button type="button" data-cmd="createLink">Link</button>
+          </div>
+          <div id="workspaceNewNote" class="form-input rich-editor note-composer-small" contenteditable="true" data-placeholder="Type a new note here…"></div>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Linked Resources</label>
+        <div id="workspaceResourcesList"></div>
+        <button class="btn-outline btn-sm" id="btnWorkspaceAddResource" type="button">+ Add Linked Resource</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" data-close="modalEntryWorkspace">Cancel</button>
+      <button class="btn-outline" id="btnWorkspaceExpand" type="button">+ Expand</button>
+      <button class="btn-primary" id="btnWorkspaceSave" type="button">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- TASK MODAL -->
+<div id="modalTask" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTaskTitle">Add Task</h2>
+      <button class="modal-close" data-close="modalTask">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <label>Title *</label>
+        <input type="text" id="taskTitle" class="form-input" placeholder="Task description" />
+      </div>
+      <div class="form-row two-col">
+        <div>
+          <label>Task Focus</label>
+          <select id="taskType" class="form-input">
+            <option value="log new idea">Log new idea</option>
+            <option value="create new resource">Create new resource</option>
+            <option value="revise existing resource">Revise existing resource</option>
+            <option value="add/link resources">Add/link resources</option>
+            <option value="add research/reference notes">Add research/reference notes</option>
+            <option value="organize/index cleanup">Organize/index cleanup</option>
+            <option value="file in index later">File in index later</option>
+            <option value="review/revise/expand section">Review/revise/expand section</option>
+            <option value="misc / other">Misc / Other</option>
+          </select>
+        </div>
+        <div>
+          <label>Priority</label>
+          <select id="taskPriority" class="form-input">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row two-col">
+        <div>
+          <label>Status</label>
+          <select id="taskStatus" class="form-input">
+            <option value="not started">Not started</option>
+            <option value="in progress">In progress</option>
+            <option value="brainstorming">Brainstorming</option>
+            <option value="nearly done">Nearly done</option>
+            <option value="completed">Completed</option>
+            <option value="postponed">Postponed</option>
+          </select>
+        </div>
+        <div>
+          <label>Related Concept / Tag</label>
+          <input type="text" id="taskRelated" class="form-input" placeholder="e.g. BED, Post-Binge Repair" />
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Notes</label>
+        <textarea id="taskNotes" class="form-input" rows="3" placeholder="Any context or next steps…"></textarea>
+      </div>
+      <div class="form-row">
+        <label>Link <em class="label-em">(optional — URL, OneDrive, or local path)</em></label>
+        <div class="res-type-tabs" id="taskLinkTypeTabs">
+          <button type="button" class="res-type-tab active" data-type="url">URL</button>
+          <button type="button" class="res-type-tab" data-type="onedrive">OneDrive</button>
+          <button type="button" class="res-type-tab" data-type="local">Local</button>
+        </div>
+        <input type="text" id="taskLink" class="form-input" placeholder="Paste URL, OneDrive link, or file path…" />
+        <div class="res-onedrive-note" id="taskOneDriveNote">Paste the sharing link from OneDrive (Share → Copy link)</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" data-close="modalTask">Cancel</button>
+      <button class="btn-primary" id="btnSaveTask">Save Task</button>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- CONCERN MANAGER MODAL -->
+<div id="modalConcernManager" class="modal-overlay hidden">
+  <div class="modal modal-wide">
+    <div class="modal-header">
+      <h2>Edit Active Concerns</h2>
+      <button class="modal-close" data-close="modalConcernManager">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="hint-text" style="margin-bottom:12px">Add, rename, or remove Plan Builder concern buttons. Put one concern per line. Suggested targets will continue to be based on matching concern wording to target tags.</p>
+      <textarea id="concernManagerText" class="form-input" rows="12"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" data-close="modalConcernManager">Cancel</button>
+      <button class="btn-primary" id="btnSaveConcerns" type="button">Save Concerns</button>
+    </div>
+  </div>
+</div>
+
+<!-- TAG MANAGER MODAL -->
+<div id="modalTagManager" class="modal-overlay hidden">
+  <div class="modal modal-wide">
+    <div class="modal-header">
+      <h2 id="modalTagManagerTitle">Manage Tags</h2>
+      <button class="modal-close" data-close="modalTagManager">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="hint-text" style="margin-bottom:12px">Edit the available tag bubbles for this tag category. Changes apply to the whole library.</p>
+      <div id="tagManagerRows"></div>
+      <button class="btn-outline btn-sm" id="btnAddManagedTag" type="button">+ Add Tag</button>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" data-close="modalTagManager">Cancel</button>
+      <button class="btn-primary" id="btnSaveManagedTags">Save Tags</button>
+    </div>
+  </div>
+</div>
+
+<!-- EXPORT MODAL -->
+<div id="modalExport" class="modal-overlay hidden">
+  <div class="modal modal-wide">
+    <div class="modal-header">
+      <h2>Export Treatment Plan</h2>
+      <button class="modal-close" data-close="modalExport">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="export-tabs">
+        <button class="export-tab active" data-format="markdown">Markdown</button>
+        <button class="export-tab" data-format="print">Print View</button>
+      </div>
+      <textarea id="exportText" class="form-input export-textarea" readonly></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" data-close="modalExport">Close</button>
+      <button class="btn-outline" id="btnPrint">Print</button>
+      <button class="btn-primary" id="btnCopyExport">Copy to Clipboard</button>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
